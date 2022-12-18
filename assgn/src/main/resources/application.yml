@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    url: jdbc:sqlserver://localhost:1433;databaseName=sbtrain;sendStringParametersAsUnicode=false;trustServerCertificate=true
+    username: sa
+    password: Agnipath1947
+    platform: mssql
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+server:
+  port: 8420
