@@ -15,19 +15,19 @@ public class Booking {
 
     public int flightId;
     public int numberOfSeats;
-    public String customerId;
+    public int customerId;
     public String status;
 
     public Booking() {
     }
 
-    public Booking(int flightId, int numberOfSeats, String customerId) {
+    public Booking(int flightId, int numberOfSeats, int customerId) {
         this.flightId = flightId;
         this.numberOfSeats = numberOfSeats;
         this.customerId = customerId;
     }
 
-    public Booking(int flightId, int numberOfSeats, String customerId, String status) {
+    public Booking(int flightId, int numberOfSeats, int customerId, String status) {
         this.flightId = flightId;
         this.numberOfSeats = numberOfSeats;
         this.customerId = customerId;

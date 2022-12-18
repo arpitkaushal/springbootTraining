@@ -11,14 +11,23 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sbtrain.assgn.model.Booking;
+import com.sbtrain.assgn.model.Customer;
 import com.sbtrain.assgn.model.Flight;
+import com.sbtrain.assgn.repo.BookingRepository;
+import com.sbtrain.assgn.repo.CustomerRepository;
 import com.sbtrain.assgn.repo.FlightRepository;
 
 @RestController
 public class Controller {
-    
+
     @Autowired
     public FlightRepository flightRepo;
+
+    @Autowired
+    public BookingRepository bookingRepo;
+
+    @Autowired
+    public CustomerRepository customerRepo;
 
     @GetMapping("/flights")
     public ResponseEntity<?> getAvailableFlights() {
@@ -26,27 +35,44 @@ public class Controller {
         return ResponseEntity.ok().body(allFlights);
     }
 
-    @PostMapping
+    @PostMapping("/book")
     public ResponseEntity<?> makeBooking(@RequestBody Booking request) {
-        // check if the flightId is valid
+
         Flight flight = flightRepo.findById(request.flightId).get();
-        if(flight==null){
+
+        if (flight == null) {
             return ResponseEntity.ok().body("Invalid Flight Id. Try again with valid flight Id");
         }
-        // check if the flight has seats
-        if(flight.availableSeats < request.numberOfSeats){
-            return ResponseEntity.ok().body("The selected flight has only "+ flight.availableSeats +". Please book accordingly.");
+
+        if (flight.availableSeats < request.numberOfSeats) {
+            return ResponseEntity.ok()
+                    .body("The selected flight has only " + flight.availableSeats + ". Please book again accordingly.");
         }
 
-        Booking booked = new Booking(request.flightId, request.numberOfSeats, request.customerId,"Succesful");
+        flight.availableSeats -= request.numberOfSeats;
+        flightRepo.save(flight);
+
+        Booking booked = new Booking(request.flightId, request.numberOfSeats, request.customerId, "Succesful");
         return ResponseEntity.ok().body(booked);
     }
 
-    @GetMapping("/flights/filter")
-    public ResponseEntity<?> fliteredFlights() {
-
-        return ResponseEntity.ok().body("Working");
+    @PostMapping("/register/customer")
+    public ResponseEntity<?> registerCustomer(@RequestBody Customer newCustomer) {
+        Customer savedCustomer = customerRepo.save(newCustomer);
+        return ResponseEntity.ok()
+                .body("Registed Successfully. Pleaase note the following detatils:\t" + savedCustomer);
     }
 
-    
+    @GetMapping("/bookings")
+    public ResponseEntity<?> getBookings() {
+        List<Booking> allBookings = bookingRepo.findAll();
+        return ResponseEntity.ok().body(allBookings);
+    }
+
+    @GetMapping("/customers")
+    public ResponseEntity<?> getCustomers() {
+        List<Customer> allCustomers = customerRepo.findAll();
+        return ResponseEntity.ok().body(allCustomers);
+    }
+
 }
