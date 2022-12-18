@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
-public class WCSCustomException {
+public class CustomException {
     
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handle(Exception e){
